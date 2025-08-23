@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Budget application</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://kit.fontawesome.com/20b7c06391.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <form id="expense-form">
+            <input type="text" id="item" placeholder="item">
+            <input type="number" id="amount" placeholder="amount" step="0.01">
+            <input type="date" id="date">
+            <button type="submit">add</button>
+        </form>
+
+        <ul id="expense-list"></ul>
+        <p>Sum: $<span id="total">0</span></p>
+
+        <script src="script.js"></script>
+    </body>
+</html>
