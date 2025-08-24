@@ -14,13 +14,13 @@ Still in development.
 - Add expenses with item name, amount, and date  /  品目名・金額・日付を入力して支出を追加  
 - View total expenses  /  合計金額の表示  
 - Data is saved using localStorage  /  ローカルストレージに保存
+- Edit and delete individual entries  /  支出の編集・削除  
+- Table view instead of simple list  /  テーブル表示
 
 ---
 
 ## Planned Features / 今後追加したい機能
 
-- Edit and delete individual entries  /  支出の編集・削除  
-- Table view instead of simple list  /  テーブル表示  
 - Calendar-based view for daily/monthly summaries  /  カレンダーを用いた日/月ごとのまとめ表示  
 - Currency conversion (multi-currency support)  /  通貨変換・マルチ通貨対応  
 - Graphs for visualising spending  /  支出のグラフ表示  
