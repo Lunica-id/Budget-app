@@ -26,6 +26,7 @@ Still in development.
 - Graphs for visualising spending  /  支出のグラフ表示  
 - Language switch / 言語切り替え機能
 - Theme switch  /  テーマ切り替え
+- Table item custamisation  /  テーブルの項目カスタマイズ
 
 ---
 
