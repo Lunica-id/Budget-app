@@ -25,6 +25,7 @@ Still in development.
 - Currency conversion (multi-currency support)  /  通貨変換・マルチ通貨対応  
 - Graphs for visualising spending  /  支出のグラフ表示  
 - Language switch / 言語切り替え機能
+- Theme switch  /  テーマ切り替え
 
 ---
 
