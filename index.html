@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Budget application</title>
         <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Playfair+Display&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/20b7c06391.js" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -12,11 +13,67 @@
             <input type="text" id="item" placeholder="item">
             <input type="number" id="amount" placeholder="amount" step="0.01">
             <input type="date" id="date">
-            <button type="submit">add</button>
+            <button type="submit" id="submit">add</button>
         </form>
 
-        <ul id="expense-list"></ul>
-        <p>Sum: $<span id="total">0</span></p>
+        <div class="tabs">
+            <button class="tab-button" data-tab="graph">Graph</button>
+            <button class="tab-button active" data-tab="calendar">Calendar</button>
+            <button class="tab-button" data-tab="list">List</button>
+        </div>
+
+        <div id="tab-content">
+            <div id="graph" class="tab-panel">
+                <p>Graph (later)</p>
+            </div>
+            <div id="calendar" class="tab-panel  active-tab">
+                <div class="calendar-header">
+                    <button id="prev-month">&lt;</button>
+                    <span id="month-year"></span>
+                    <button id="next-month">&gt;</button>
+                </div>
+                <table id="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>Sun.</th>
+                            <th>Mon.</th>
+                            <th>Tue.</th>
+                            <th>Wed.</th>
+                            <th>Thu.</th>
+                            <th>Fri.</th>
+                            <th>Sat.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendar-body">
+
+                    </tbody>
+                </table>
+                <div id="monthly-total" class="monthly-total"></div>
+                <div id="daily-expense-details" class="expense-details"></div>
+            </div>
+            <div id="list" class="tab-panel">
+                <table id="expense-table">
+                    <thead>
+                        <tr>
+                            <th class="title">Date</th>
+                            <th class="title">Item</th>
+                            <th class="title">Amount</th>
+                            <th ></th>
+                            <th ></th>
+                        </tr>
+                    </thead>
+                    <tbody id="expense-list"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td class="sum">Sum:</td>
+                            <td class="sum">$<span id="total">0</span></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 
         <script src="script.js"></script>
     </body>

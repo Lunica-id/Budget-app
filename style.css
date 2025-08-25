@@ -1,0 +1,308 @@
+:root {
+    --background-colour: #2f3e46;
+    --main-colour: #a8b5c3;
+    --sub-colour: #d2d8d4;
+    --accent-colour: #c2a27e;
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+
+html {
+    background-color: var(--background-colour);
+    color: white;
+    font-family: 'EB Garamond', serif;
+    letter-spacing: 0.1em;
+}
+
+/* input field design */
+#expense-form {
+    text-align: center;
+    margin: 40px 0 30px 0;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+#item {
+    width: 150px;
+    height: 30px;
+    font-size: 18px;
+    background-color: var(--sub-colour);
+}
+#amount {
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    background-color: var(--sub-colour);
+}
+#date {
+    width: 120px;
+    height: 30px;
+    font-size: 16px;
+    background-color: var(--sub-colour);
+}
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    background-color: var(--sub-colour);
+    border: 1px solid var(--main-colour);
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 16px;
+    font-family: 'Georgia', serif;
+    color: black;
+    outline: none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
+    border-color: var(--accent-colour);
+    box-shadow: 0 0 4px var(--accent-colour);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+#submit {
+    width: 100px;
+    height: 30px;
+    padding: 0;
+    font-size: 18px;
+    background: var(--accent-colour);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
+    font-weight: bold;
+    font-family: serif;
+}
+#submit:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* tab design */
+.tabs {
+    text-align: center;
+    margin: 20px 0;
+    
+}
+.tab-button {
+    position: relative;
+    width: 150px;
+    padding: 10px 0;
+    margin: 0 10px;
+    text-align: center;
+    background-color: transparent;
+    color: var(--sub-colour);
+    border: none;
+    font-size: 16px;
+    font-family: 'Georgia', serif;
+    box-shadow: 1px 4px 3px rgba(0, 0, 0, 0.2);
+}
+.tab-button::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-colour);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    opacity: 0;
+}
+.tab-button:hover::after {
+    width: 80%;
+    opacity: 1;
+}
+.tab-button.active {
+    background-color: var(--accent-colour);
+    color: white;
+    font-weight: bold;
+    transition: all 0.15s ease;
+}
+.tab-button.active::after {
+    display: none; 
+}
+.tab-panel {
+    display: none;
+}
+.tab-panel.active-tab {
+    display: block;
+}
+
+/* calendar design */
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 5px;
+    color: var(--sub-colour);
+}
+
+#month-year {
+    font-size: 35px;
+}
+
+#prev-month, #next-month {
+    font-size: 18px;
+    background-color: rgba(168, 181, 195, 0.8);
+    border: none;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    height: 25px;
+}
+
+#calendar-table {
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+    border-collapse: collapse;
+    text-align: center;
+    color: white;
+}
+
+#calendar-table th, #calendar-table td {
+    padding: 6px;
+    border: 1px solid var(--sub-colour);
+}
+
+#calendar-table th {
+    background-color: rgba(168, 181, 195, 0.5);
+}
+
+#calendar-table td {
+    height: 60px;
+    background-color: rgba(168, 181, 195, 0.2);
+}
+
+#calendar-table td.has-expense {
+    position: relative;
+    z-index: 1;
+    box-shadow: inset 0 0 9px rgba(194, 162, 126, 0.7);
+    border-radius: 0px;
+    transition: box-shadow 0.3s ease;
+}
+
+#calendar-table td.has-expense:hover {
+    box-shadow: inset 0 0 12px rgba(194, 162, 126, 1);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.monthly-total {
+    text-align: right;
+    margin: 5px 25px 20px 0;
+    color: var(--sub-colour);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.expense-details {
+    max-width: 600px;
+    width: 80%;
+    margin: 0px auto;
+    background-color: var(--main-colour);
+    color: black;
+    padding: 0px 0 10px 0;
+    border-radius: 5px;
+    display: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.calendar-day {
+    font-weight: bold;
+}
+
+.calendar-amount {
+    font-size: 14px;
+    color: var(--sub-colour);
+    margin-top: 2px;
+}
+
+
+
+/* List design */
+#expense-table {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+.title, .date-table, .item-table, .amount-table, .edit-table {
+    border: 1px solid var(--main-colour);
+}
+.title {
+    text-align: center;
+    margin: 2px 0px;
+    background-color: var(--main-colour);
+    color: black;
+}
+.date-table {
+    width: 100px;
+    text-align: center;
+}
+.item-table {
+    width: 300px;
+    padding: 2px 0px 2px 10px;
+}
+.amount-table {
+    width: 100px;
+    text-align: right;
+    padding: 2px 10px 2px 0;
+}
+i {
+    color: white;
+    text-align: center;
+    
+}
+i:hover {
+    color: var(--accent-colour);
+    cursor: pointer;
+}
+.edit {
+    background-color: transparent;
+    border: 0;
+}
+.sum {
+    text-align: right;
+    padding: 2px 10px 2px 0;
+    font-size: 18px;
+}
+
+
+@media screen and (max-width: 600px) {
+    #expense-form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #item, #amount, #date, #submit {
+        width: 90%;
+        margin-bottom: 8px;
+    }
+
+    #expense-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    #expense-table{
+        width: 800px;
+        min-width: 100%;
+    }
+    
+    .sum, .item-table, .amount-table {
+        font-size: 20px;
+    }
+    
+    .item-table {
+        width: 200px;
+    }
+
+    i {
+        font-size: 28px;
+        margin: 8px;
+    }
+}
