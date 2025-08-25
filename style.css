@@ -237,6 +237,7 @@ input[type="date"]:focus {
     margin: 2px 0px;
     background-color: var(--main-colour);
     color: black;
+    min-width: 100px;
 }
 .date-table {
     width: 100px;
