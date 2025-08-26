@@ -100,6 +100,10 @@ input[type="date"]:focus {
     font-family: 'Georgia', serif;
     box-shadow: 1px 4px 3px rgba(0, 0, 0, 0.2);
 }
+.tab-button:hover {
+    box-shadow: none;
+    transition: box-shadow 0.2s ease;
+}
 .tab-button::after {
     content: "";
     position: absolute;
@@ -164,7 +168,7 @@ input[type="date"]:focus {
 }
 
 #calendar-table th, #calendar-table td {
-    padding: 6px;
+    width: 70px;
     border: 1px solid var(--sub-colour);
 }
 
@@ -221,6 +225,27 @@ input[type="date"]:focus {
     color: var(--sub-colour);
     margin-top: 2px;
 }
+
+.calendar-popup {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--main-colour);
+    color: black;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 10;
+}
+
+.has-expense:hover .calendar-popup {
+    display: block;
+}
+
 
 
 
