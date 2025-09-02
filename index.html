@@ -6,27 +6,50 @@
         <title>Budget application</title>
         <link rel="stylesheet" href="style.css">
         <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Playfair+Display&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://kit.fontawesome.com/20b7c06391.js" crossorigin="anonymous"></script>
     </head>
+
     <body>
         <form id="expense-form">
             <input type="text" id="item" placeholder="item">
             <input type="number" id="amount" placeholder="amount" step="0.01">
             <input type="date" id="date">
+            <select id="category" required>
+                <option selected disabled>-- Select Category --</option>
+                <option value="Food">Food</option>
+                <option value="Utilities">Utilities</option>
+                <option value="education">Education</option>
+                <option value="clothes">Clothes</option>
+                <option value="Transport">Transport</option>
+                <option value="hobby-Entertainment">Hobby / Entertainment</option>
+                <option value="health">Health</option>
+                <option value="subscription">Subscription</option>
+                <option value="Other">Other</option>
+                <option value="tax">Tax</option>
+            </select>
             <button type="submit" id="submit">add</button>
         </form>
 
         <div class="tabs">
-            <button class="tab-button" data-tab="graph">Graph</button>
-            <button class="tab-button active" data-tab="calendar">Calendar</button>
+            <button class="tab-button active" data-tab="graph">Graph</button>
+            <button class="tab-button" data-tab="calendar">Calendar</button>
             <button class="tab-button" data-tab="list">List</button>
         </div>
 
         <div id="tab-content">
-            <div id="graph" class="tab-panel">
-                <p>Graph (later)</p>
+            <div id="graph" class="tab-panel active-tab">
+                <div class="graph-header">
+                    <button id="prev-graph-month">&lt;</button>
+                    <span id="graph-month-year"></span>
+                    <button id="next-graph-month">&gt;</button>
+                </div>
+                <h3>Monthly Overview</h3>
+                <canvas id="expenseGraph" width="600" height="300"></canvas>
+                <h4>Category Breakdown</h4>
+                <canvas id="categoryGraph" width="400" height="200"></canvas>
             </div>
-            <div id="calendar" class="tab-panel  active-tab">
+            <div id="calendar" class="tab-panel">
                 <div class="calendar-header">
                     <button id="prev-month">&lt;</button>
                     <span id="month-year"></span>
@@ -58,6 +81,7 @@
                             <th class="title">Date</th>
                             <th class="title">Item</th>
                             <th class="title">Amount</th>
+                            <th class="title">Category</th>
                             <th ></th>
                             <th ></th>
                         </tr>
@@ -65,6 +89,7 @@
                     <tbody id="expense-list"></tbody>
                     <tfoot>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td class="sum">Sum:</td>
                             <td class="sum">$<span id="total">0</span></td>

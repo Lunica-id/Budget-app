@@ -16,13 +16,13 @@ Still in development.
 - Data is saved using localStorage / ローカルストレージに保存
 - Table view instead of simple list / テーブル表示
 - Calendar-based view for daily/monthly summaries / カレンダーを用いた日/月ごとのまとめ表示
+- Graphs for visualising spending (Monthly and by category) / 支出のグラフ表示(月ごと、カテゴリーごと)
 
 ---
 
 ## Planned Features / 今後追加したい機能
 
 - Currency conversion (multi-currency support) / 通貨変換・マルチ通貨対応
-- Graphs for visualising spending / 支出のグラフ表示
 - Language switch / 言語切り替え機能
 - Theme switch / テーマ切り替え
 - Table item custamisation / テーブルの項目カスタマイズ

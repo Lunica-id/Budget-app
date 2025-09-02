@@ -21,6 +21,7 @@ html {
     text-align: center;
     margin: 40px 0 30px 0;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 4px;
 }
@@ -42,9 +43,16 @@ html {
     font-size: 16px;
     background-color: var(--sub-colour);
 }
+#category {
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+    background-color: var(--sub-colour);
+}
 input[type="text"],
 input[type="number"],
-input[type="date"] {
+input[type="date"],
+select {
     background-color: var(--sub-colour);
     border: 1px solid var(--main-colour);
     border-radius: 3px;
@@ -56,7 +64,8 @@ input[type="date"] {
 }
 input[type="text"]:focus,
 input[type="number"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+select:focus {
     border-color: var(--accent-colour);
     box-shadow: 0 0 4px var(--accent-colour);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -136,6 +145,41 @@ input[type="date"]:focus {
     display: block;
 }
 
+/* graph design */
+#graph {
+    text-align: center;
+}
+#expenseGraph {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+    display: block;
+}
+#categoryGraph {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+    display: block;
+}
+.graph-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 5px;
+    color: var(--sub-colour);
+}
+#graph-month-year {
+    font-size: 35px;
+}
+#prev-graph-month, #next-graph-month {
+    font-size: 18px;
+    background-color: rgba(168, 181, 195, 0.8);
+    border: none;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    height: 25px;
+}
+
 /* calendar design */
 .calendar-header {
     display: flex;
@@ -145,11 +189,9 @@ input[type="date"]:focus {
     padding: 5px;
     color: var(--sub-colour);
 }
-
 #month-year {
     font-size: 35px;
 }
-
 #prev-month, #next-month {
     font-size: 18px;
     background-color: rgba(168, 181, 195, 0.8);
@@ -157,7 +199,6 @@ input[type="date"]:focus {
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     height: 25px;
 }
-
 #calendar-table {
     width: 100%;
     max-width: 600px;
@@ -166,21 +207,17 @@ input[type="date"]:focus {
     text-align: center;
     color: white;
 }
-
 #calendar-table th, #calendar-table td {
     width: 70px;
     border: 1px solid var(--sub-colour);
 }
-
 #calendar-table th {
     background-color: rgba(168, 181, 195, 0.5);
 }
-
 #calendar-table td {
     height: 60px;
     background-color: rgba(168, 181, 195, 0.2);
 }
-
 #calendar-table td.has-expense {
     position: relative;
     z-index: 1;
@@ -188,13 +225,11 @@ input[type="date"]:focus {
     border-radius: 0px;
     transition: box-shadow 0.3s ease;
 }
-
 #calendar-table td.has-expense:hover {
     box-shadow: inset 0 0 12px rgba(194, 162, 126, 1);
     cursor: pointer;
     transition: box-shadow 0.3s ease;
 }
-
 .monthly-total {
     text-align: right;
     margin: 5px 25px 20px 0;
@@ -202,7 +237,6 @@ input[type="date"]:focus {
     font-weight: bold;
     font-size: 20px;
 }
-
 .expense-details {
     max-width: 600px;
     width: 80%;
@@ -215,17 +249,14 @@ input[type="date"]:focus {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     text-align: center;
 }
-
 .calendar-day {
     font-weight: bold;
 }
-
 .calendar-amount {
     font-size: 14px;
     color: var(--sub-colour);
     margin-top: 2px;
 }
-
 .calendar-popup {
     position: absolute;
     bottom: -60px;
@@ -241,20 +272,16 @@ input[type="date"]:focus {
     display: none;
     z-index: 10;
 }
-
 .has-expense:hover .calendar-popup {
     display: block;
 }
-
-
-
 
 /* List design */
 #expense-table {
     margin: 0 auto;
     border-collapse: collapse;
 }
-.title, .date-table, .item-table, .amount-table, .edit-table {
+.title, .date-table, .item-table, .amount-table, .category-table, .edit-table {
     border: 1px solid var(--main-colour);
 }
 .title {
@@ -276,6 +303,10 @@ input[type="date"]:focus {
     width: 100px;
     text-align: right;
     padding: 2px 10px 2px 0;
+}
+.category-table {
+    width: 320px;
+    padding: 2px 0px 2px 10px;
 }
 i {
     color: white;
