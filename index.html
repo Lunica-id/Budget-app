@@ -32,22 +32,28 @@
         </form>
 
         <div class="tabs">
-            <button class="tab-button active" data-tab="graph">Graph</button>
+            <button class="tab-button" data-tab="graph">Graph</button>
             <button class="tab-button" data-tab="calendar">Calendar</button>
-            <button class="tab-button" data-tab="list">List</button>
+            <button class="tab-button active" data-tab="list">List</button>
         </div>
 
         <div id="tab-content">
-            <div id="graph" class="tab-panel active-tab">
+            <div id="graph" class="tab-panel">
                 <div class="graph-header">
                     <button id="prev-graph-month">&lt;</button>
                     <span id="graph-month-year"></span>
                     <button id="next-graph-month">&gt;</button>
                 </div>
-                <h3>Monthly Overview</h3>
-                <canvas id="expenseGraph" width="600" height="300"></canvas>
-                <h4>Category Breakdown</h4>
-                <canvas id="categoryGraph" width="400" height="200"></canvas>
+                <div class="wrapper">
+                    <div>
+                        <h3>Monthly Overview</h3>
+                        <canvas id="expenseGraph" width="600" height="300"></canvas>
+                    </div>
+                    <div>
+                        <h3>Category Breakdown</h3>
+                        <canvas id="categoryGraph" width="350" height="180"></canvas>
+                    </div>
+                </div>
             </div>
             <div id="calendar" class="tab-panel">
                 <div class="calendar-header">
@@ -74,7 +80,41 @@
                 <div id="monthly-total" class="monthly-total"></div>
                 <div id="daily-expense-details" class="expense-details"></div>
             </div>
-            <div id="list" class="tab-panel">
+            <div id="list" class="tab-panel active-tab">
+                <div class="controls">
+                    <div class="wrap">
+                        <button id="sort-toggle" class="btn-inactive">Sort</button>
+                        <button id="filter-toggle" class="btn-inactive">Filter</button>
+                        <button id="export-button" class="btn-inactive">Export</button>
+                        <button id="import-button" class="btn-inactive">Import</button>
+                        <input type="file" id="import-file" accept=".json" style="display: none;">
+                    </div>
+                    <div id="sort-panel" class="list-popup hidden">
+                        <label for="sort" >Sort:</label>
+                        <select id="sort">
+                            <option value="date-asc">Date ascending</option>
+                            <option value="date-desc">Date descending</option>
+                            <option value="amount-asc">Amount ascending</option>
+                            <option value="amount-desc">Amount descending</option>
+                            <option value="category">Category</option>
+                        </select>
+                    </div>
+                    <div id="filter-panel" class="list-popup hidden">
+                        <label for="category-filter">Category:</label>
+                        <select id="category-filter">
+                            <option value="">All</option>
+                        </select>
+                        <label>Minimum amount:</label>
+                        <input type="number" id="minAmount">
+                        <label>Maximum amount:</label>
+                        <input type="number" id="maxAmount">
+                        <label>Start date:</label>
+                        <input type="date" id="startDate">
+                            <label>End date:</label>
+                        <input type="date" id="endDate">
+                    </div>
+                </div>
+                
                 <table id="expense-table">
                     <thead>
                         <tr>

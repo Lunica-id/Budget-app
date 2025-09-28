@@ -18,6 +18,7 @@ function init() {
     renderGraph();
     renderCategoryGraph();
     setupEventListeners();
+    setupFilterPopup();
 }
 
 window.addEventListener("DOMContentLoaded", init);
@@ -25,6 +26,18 @@ window.addEventListener("DOMContentLoaded", init);
 // Event Listeners
 function setupEventListeners() {
     form.addEventListener("submit", handleFormSubmit);
+
+    // import / export
+    document.getElementById("export-button").addEventListener("click", downloadBackup);
+    document.getElementById("import-button").addEventListener("click", () => {
+        document.getElementById("import-file").click();
+    });
+    document.getElementById("import-file").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            uploadBackup(file);
+        }
+    });
 
     // moving calender month
     document.getElementById("prev-month").addEventListener("click", () => {
@@ -53,6 +66,9 @@ function setupEventListeners() {
 
     // tab switching
     setupTabSwitching();
+
+    // sort list
+    document.getElementById("sort").addEventListener("change", updateList);
 }
 
 
@@ -109,45 +125,82 @@ function loadFromLocalStorage() {
 function saveToLocalStorage() {
     localStorage.setItem("expenses", JSON.stringify(expenses));
 }
+function downloadBackup() {
+    const data = localStorage.getItem("expenses");
+    if (!data) {
+        alert("No data to back up.");
+        return;
+    }
 
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
 
-// List / Total
-function updateList() {
-    list.innerHTML = "";
-    expenses.forEach((e, index) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td class="date-table">${e.date}</td>
-            <td class="item-table">${e.item}</td>
-            <td class="amount-table">$${e.amount.toFixed(2)}</td>
-            <td class="category-table">${e.category}</td>
-            <td>
-                <button onclick="editExpense(${index})" class="edit"><i class="fas fa-edit"></i></button>
-                <button onclick="deleteExpense(${index})" class="edit"><i class="fas fa-trash-alt"></i></button>
-            </td>
-        `;
-        list.appendChild(tr);
-    });
+    const dateStr = new Date().toISOString().split("T")[0]; 
+    a.download = `expenses-backup-${dateStr}.json`;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
+function uploadBackup(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+
+            if (!Array.isArray(importedData)) {
+                alert("Invalid backup file.");
+                return;
+            }
+
+            localStorage.setItem("expenses", JSON.stringify(importedData));
+            alert("Backup imported successfully! Reloading...");
+            location.reload(); 
+        } catch (err) {
+            alert("Error reading backup file.");
+            console.error(err);
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+
+// Total
 function updateTotal() {
     const total = expenses.reduce((sum, e) => sum + e.amount, 0);
     totalDisplay.textContent = total.toFixed(2);
 }
-function getCategoryTotals() {
-    const categoryTotals = {};
 
-    const month = graphDate.getMonth() + 1;
-    const year = graphDate.getFullYear();
-    const prefix = `${year}-${String(month).padStart(2,"0")}`;
 
-    monthlyExpenses.forEach(e => {
-        if (!categoryTotals[e.category]) {
-            categoryTotals[e.category] = 0;
-        }
-        categoryTotals[e.category] += e.amount;
+// Tab Switching
+function setupTabSwitching() {
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.getAttribute('data-tab');
+
+            document.querySelectorAll('.tab-button').forEach(btn =>
+                btn.classList.remove('active')
+            );
+            button.classList.add('active');
+
+            document.querySelectorAll('.tab-panel').forEach(content =>
+                content.classList.remove('active-tab')
+            );
+            document.getElementById(tab).classList.add('active-tab');
+
+            if (tab === 'graph') {
+                setTimeout(() => {
+                    renderGraph();
+                    renderCategoryGraph();
+                }, 0);
+            }
+        });
     });
-
-    return categoryTotals;
 }
 
 
@@ -237,7 +290,7 @@ function renderCategoryGraph() {
     }
 
     categoryGraph = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: labels,
             datasets: [{
@@ -246,6 +299,7 @@ function renderCategoryGraph() {
             }]
         },
         options: {
+            cutout: '75%',
             plugins: {
                 legend: {
                     labels: {
@@ -353,28 +407,139 @@ function handleCalendarClick(e) {
 }
 
 
-// Tab Switching
-function setupTabSwitching() {
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const tab = button.getAttribute('data-tab');
+// List
+function updateList() {
+    const sortType = document.getElementById("sort").value;
+    const selectedCategory = document.getElementById("category-filter").value;
+    const minAmount = parseFloat(document.getElementById("minAmount").value);
+    const maxAmount = parseFloat(document.getElementById("maxAmount").value);
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-            document.querySelectorAll('.tab-button').forEach(btn =>
-                btn.classList.remove('active')
-            );
-            button.classList.add('active');
+    list.innerHTML = "";
 
-            document.querySelectorAll('.tab-panel').forEach(content =>
-                content.classList.remove('active-tab')
-            );
-            document.getElementById(tab).classList.add('active-tab');
+    let sortedExpenses = [...expenses];
+    switch (sortType) {
+        case "date-asc":
+            sortedExpenses.sort((a,b) => new Date(a.date) - new Date(b.date));
+            break;
+        case "date-desc":
+            sortedExpenses.sort((a,b) => new Date(b.date) - new Date(a.date));
+            break;
+        case "amount-asc":
+            sortedExpenses.sort((a,b) => a.amount - b.amount);
+            break;
+        case "amount-desc":
+            sortedExpenses.sort((a,b) => b.amount - a.amount);
+            break;
+        case "category":
+            sortedExpenses.sort((a,b) => a.category.localeCompare(b.category));
+            break;
+    }
 
-            if (tab === 'graph') {
-                setTimeout(() => {
-                    renderGraph();
-                }, 0);
-            }
-        });
+    const filteredExpenses = sortedExpenses.filter(e => {
+        if (selectedCategory && e.category !== selectedCategory) return false;
+        if (!isNaN(minAmount) && e.amount < minAmount) return false;
+        if (!isNaN(maxAmount) && e.amount > maxAmount) return false;
+        if (startDate && new Date(e.date) < new Date(startDate)) return false;
+        if (endDate && new Date(e.date) > new Date(endDate)) return false;
+        return true;
+    })
+
+    filteredExpenses.forEach((e, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td class="date-table">${e.date}</td>
+            <td class="item-table">${e.item}</td>
+            <td class="amount-table">$${e.amount.toFixed(2)}</td>
+            <td class="category-table">${e.category}</td>
+            <td>
+                <button onclick="editExpense(${index})" class="edit"><i class="fas fa-edit"></i></button>
+                <button onclick="deleteExpense(${index})" class="edit"><i class="fas fa-trash-alt"></i></button>
+            </td>
+        `;
+        list.appendChild(tr);
+    });
+}
+/* function setupFilterPopup() {
+    const sortBtn = document.getElementById("sort-toggle");
+    const filterBtn = document.getElementById("filter-toggle");
+    const sortPanel = document.getElementById("sort-panel");
+    const filterPanel = document.getElementById("filter-panel");
+
+    sortBtn.addEventListener("click", () => {
+        const isOpen = !sortPanel.classList.contains("hidden");
+        sortPanel.classList.toggle("hidden", isOpen);
+        sortBtn.textContent = isOpen ? "Sort" : "Close";
+        filterPanel.classList.add("hidden");
+        filterBtn.textContent = "Filter"
+    });
+
+    filterBtn.addEventListener("click", () => {
+        const isOpen = !filterPanel.classList.contains("hidden");
+        filterPanel.classList.toggle("hidden", isOpen);
+        filterBtn.textContent = isOpen ? "Filter" : "Close";
+        sortPanel.classList.add("hidden");
+        sortBtn.textContent = "Sort";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".controls")) {
+            sortPanel.classList.add("hidden");
+            filterPanel.classList.add("hidden");
+            sortBtn.textContent = "Sort";
+            filterBtn.textContent = "Filter";
+        }
+    });  
+} */
+function setupFilterPopup() {
+    const sortBtn = document.getElementById("sort-toggle");
+    const filterBtn = document.getElementById("filter-toggle");
+    const sortPanel = document.getElementById("sort-panel");
+    const filterPanel = document.getElementById("filter-panel");
+
+    function closeAll() {
+        sortPanel.classList.remove("list-popup");
+        sortPanel.classList.add("hidden");
+        filterPanel.classList.remove("list-popup");
+        filterPanel.classList.add("hidden");
+
+        sortBtn.textContent = "Sort";
+        filterBtn.textContent = "Filter";
+
+        sortBtn.classList.remove("btn-active");
+        sortBtn.classList.add("btn-inactive");
+        filterBtn.classList.remove("btn-active");
+        filterBtn.classList.add("btn-inactive");
+    }
+
+    function togglePanel(panel,btn) {
+        const isOpen = panel.classList.contains("list-popup");
+
+        closeAll();
+
+        if (!isOpen) {
+            panel.classList.remove("hidden");
+            panel.classList.add("list-popup");
+
+            btn.textContent = "Close";
+            btn.classList.remove("btn-inactive");
+            btn.classList.add("btn-active");
+        }
+    }
+
+    sortBtn.addEventListener("click", () => {
+        togglePanel(sortPanel, sortBtn);
+    });
+
+    filterBtn.addEventListener("click", () => {
+        togglePanel(filterPanel, filterBtn);
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".controls")) {
+            closeAll();
+        }
     });
 }
 
@@ -382,9 +547,9 @@ function setupTabSwitching() {
 // Colour
 function generateGraphColours(count) {
     const baseColours = [
-        '#ff6385d8', '#36A2EBb8', '#FFCE56b8', '#4BC0C0b8',
-        '#9966FFb8', '#FF9F40b8', '#2ecc71b8', '#e74c3cb8',
-        '#8e44adb8', '#f1c40fb8', '#1abc9cb8', '#7f8c8db8'
+        '#ff6385d8', '#36a3ebd8', '#FFCE56d8', '#4BC0C0d8',
+        '#9966FFd8', '#FF9F40d8', '#2ecc71d8', '#e74c3cd8',
+        '#8e44add8', '#f1c40fd8', '#1abc9cd8', '#7f8c8dd8'
     ];
     const colours = [];
     for (let i = 0; i < count; i++) {
