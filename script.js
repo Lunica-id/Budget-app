@@ -81,12 +81,19 @@ function handleFormSubmit(e) {
     const category = document.getElementById("category").value;
 
     if (item && !isNaN(amount) && date) {
-        const expense = {item, amount, date, category};
         if (editingIndex !== null) {
-            expenses[editingIndex] = expense;
+            const original = expenses[editingIndex];
+            expenses[editingIndex] = {
+                ...original,
+                item,
+                amount,
+                date,
+                category
+            };
             editingIndex = null;
         } else {
-            expenses.push(expense);
+            const id = Date.now();
+            expenses.push({id, item, amount, date, category});
         }
         updateList();
         updateTotal();
@@ -96,15 +103,24 @@ function handleFormSubmit(e) {
         renderGraph();
     }
 }
-function editExpense(index) {
-    const e = expenses[index];
+function editExpense(id) {
+    console.log("Edit button clicked. ID:", id);
+    const index = expenses.findIndex(e => e.id === id)
+    console.log("Found index:", index);
+    if (index === -1) return;
+
+    const e= expenses[index];
     document.getElementById("item").value = e.item;
     document.getElementById("amount").value = e.amount;
     document.getElementById("date").value = e.date;
     document.getElementById("category").value = e.category;
     editingIndex = index;
+    console.log("Set editingIndex to", editingIndex);
 }
-function deleteExpense(index) {
+function deleteExpense(id) {
+    const index = expenses.findIndex (e => e.id === id);
+    if (index === -1) return;
+
     expenses.splice(index, 1);
     updateList();
     updateTotal();
@@ -446,7 +462,7 @@ function updateList() {
         return true;
     })
 
-    filteredExpenses.forEach((e, index) => {
+    filteredExpenses.forEach((e) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td class="date-table">${e.date}</td>
@@ -454,8 +470,8 @@ function updateList() {
             <td class="amount-table">$${e.amount.toFixed(2)}</td>
             <td class="category-table">${e.category}</td>
             <td>
-                <button onclick="editExpense(${index})" class="edit"><i class="fas fa-edit"></i></button>
-                <button onclick="deleteExpense(${index})" class="edit"><i class="fas fa-trash-alt"></i></button>
+                <button onclick="editExpense(${e.id})" class="edit"><i class="fas fa-edit"></i></button>
+                <button onclick="deleteExpense(${e.id})" class="edit"><i class="fas fa-trash-alt"></i></button>
             </td>
         `;
         list.appendChild(tr);
